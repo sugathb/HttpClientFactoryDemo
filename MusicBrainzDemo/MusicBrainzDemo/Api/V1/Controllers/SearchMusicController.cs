@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 
-namespace SearchMusicDemo.Api.V1.Controllers
+namespace MusicBrainzDemo.Api.V1.Controllers
 {
     [ApiController]
     [Route("api/v1/[controller]")]
