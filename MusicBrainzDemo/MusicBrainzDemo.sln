@@ -11,7 +11,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MusicBrainzDemo.Domain", "M
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MusicBrainzDemo.Infrastructure", "MusicBrainzDemo.Infrastructure\MusicBrainzDemo.Infrastructure.csproj", "{A8FA3C0E-067B-48AC-AD7D-E43A1EEE3C66}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MusicBrainzDemo.Infrastructure.Tests", "MusicBrainzDemo.Infrastructure.Tests\MusicBrainzDemo.Infrastructure.Tests.csproj", "{4C35DBCF-DB09-49BE-A8AA-E42F00D8FE88}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MusicBrainzDemo.Infrastructure.Tests", "MusicBrainzDemo.Infrastructure.Tests\MusicBrainzDemo.Infrastructure.Tests.csproj", "{4C35DBCF-DB09-49BE-A8AA-E42F00D8FE88}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{FD75D0FE-82B2-47D5-AA87-3A7F8621B497}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -42,6 +44,9 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{4C35DBCF-DB09-49BE-A8AA-E42F00D8FE88} = {FD75D0FE-82B2-47D5-AA87-3A7F8621B497}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {47DE6D3B-4EA1-43EE-8197-D87CE01C464B}

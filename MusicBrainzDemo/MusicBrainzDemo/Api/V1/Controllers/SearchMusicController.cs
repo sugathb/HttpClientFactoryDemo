@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using MusicBrainzDemo.Api.V1.Models;
 
 namespace MusicBrainzDemo.Api.V1.Controllers
 {
@@ -8,7 +9,7 @@ namespace MusicBrainzDemo.Api.V1.Controllers
     {
 
         [HttpGet]
-        public string Get()
+        public string Get([FromQuery]SearchMusicRequest searchMusicRequest)
         {
             return "Hello";
         }
