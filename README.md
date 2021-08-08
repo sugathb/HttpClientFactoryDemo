@@ -1,6 +1,6 @@
 # Music Brainz Microservice
 
-Music Brains Demo API allows user to seach music by artist name. If there are more than one artist for a searched name, it'll return a list of all maching artists. If there is only one, the API will return a collection of releases of the artist.
+Music Brains Demo API allows user to seach music by artist name whcih will return a list of all maching artists.
 
 ### Consume API
 The docker image for this api can be downloaded from,
