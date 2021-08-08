@@ -41,17 +41,18 @@ namespace MusicBrainzDemo
                 });
             });
 
-            services.AddHttpClient("musicApiClient", c =>
-                {
-                    c.BaseAddress = new Uri(Configuration.GetValue<string>("MusicBrainzApiBaseUrl") ?? throw new ArgumentException(InvalidBaseUrlEmptyError));
-                    c.DefaultRequestHeaders.Add("User-Agent", Configuration.GetValue<string>("ApplicationId"));
-                    c.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-                })
-                .SetHandlerLifetime(TimeSpan.FromMinutes(5))  //Set lifetime to five minutes
+
+            services.AddHttpClient<ISearchMusicClient, SearchMusicClient>(c =>
+                    {
+                        c.BaseAddress = new Uri(Configuration.GetValue<string>("MusicBrainzApiBaseUrl") ?? throw new ArgumentException(InvalidBaseUrlEmptyError));
+                        c.DefaultRequestHeaders.Add("User-Agent", Configuration.GetValue<string>("ApplicationId"));
+                        c.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                    }
+                )
+                .SetHandlerLifetime(TimeSpan.FromMinutes(5)) //Set lifetime to five minutes
                 .AddPolicyHandler(GetRetryPolicy());
 
             services.AddMediatR(typeof(GetArtistsQuery));
-            services.AddSingleton<ISearchMusicClient, SearchMusicClient>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -10,12 +10,13 @@ namespace MusicBrainzDemo.Infrastructure
     {
         private const string SearchArtistsByNameError = "Error occurred when searching artists.";
 
-        private readonly IHttpClientFactory _httpClientFactory;
+        //private readonly IHttpClientFactory _httpClientFactory;
+        private readonly HttpClient _httpClient;
         private readonly ILogger<SearchMusicClient> _logger;
 
-        public SearchMusicClient(IHttpClientFactory clientFactory, ILogger<SearchMusicClient> logger)
+        public SearchMusicClient(HttpClient httpClient, ILogger<SearchMusicClient> logger)
         {
-            _httpClientFactory = clientFactory;
+            _httpClient = httpClient;
             _logger = logger;
         }
 
@@ -24,8 +25,8 @@ namespace MusicBrainzDemo.Infrastructure
             try
             {
                 var request = new HttpRequestMessage(HttpMethod.Get, $"artist?query=artist:{artistName}");
-                var client = _httpClientFactory.CreateClient("musicApiClient");
-                var response = await client.SendAsync(request);
+
+                var response = await _httpClient.SendAsync(request);
 
                 if (!response.IsSuccessStatusCode)
                 {
