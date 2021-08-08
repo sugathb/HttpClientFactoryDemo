@@ -3,7 +3,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Serilog;
 
-namespace MusicBrainzDemo
+namespace MusicBrainzDemo.Api
 {
     public class Program
     {

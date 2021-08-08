@@ -14,7 +14,7 @@ using Polly;
 using Polly.Contrib.WaitAndRetry;
 using Polly.Extensions.Http;
 
-namespace MusicBrainzDemo
+namespace MusicBrainzDemo.Api
 {
     public class Startup
     {

@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.31424.327
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MusicBrainzDemo", "MusicBrainzDemo\MusicBrainzDemo.csproj", "{F0E8647A-C5B4-4EA1-B7BB-188239E668CA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MusicBrainzDemo.Api", "MusicBrainzDemo\MusicBrainzDemo.Api.csproj", "{F0E8647A-C5B4-4EA1-B7BB-188239E668CA}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MusicBrainzDemo.ApplicationServices", "MusicBrainzDemo.ApplicationServices\MusicBrainzDemo.ApplicationServices.csproj", "{E9FC04C6-5DE4-48F7-ADC1-7D3AF203B535}"
 EndProject
