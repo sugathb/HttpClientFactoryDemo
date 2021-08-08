@@ -1,3 +1,6 @@
+using System;
+using System.Net.Http;
+using System.Net.Http.Headers;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -7,11 +10,16 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using MusicBrainzDemo.ApplicationServices;
 using MusicBrainzDemo.Infrastructure;
+using Polly;
+using Polly.Contrib.WaitAndRetry;
+using Polly.Extensions.Http;
 
 namespace MusicBrainzDemo
 {
     public class Startup
     {
+        private const string InvalidBaseUrlEmptyError = "MusicBrainzApiBaseUrl cannot be empty.";
+
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -32,6 +40,15 @@ namespace MusicBrainzDemo
                     Version = Configuration.GetValue<string>("SwaggerVersion")
                 });
             });
+
+            services.AddHttpClient("musicApiClient", c =>
+                {
+                    c.BaseAddress = new Uri(Configuration.GetValue<string>("MusicBrainzApiBaseUrl") ?? throw new ArgumentException(InvalidBaseUrlEmptyError));
+                    c.DefaultRequestHeaders.Add("User-Agent", Configuration.GetValue<string>("ApplicationId"));
+                    c.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                })
+                .SetHandlerLifetime(TimeSpan.FromMinutes(5))  //Set lifetime to five minutes
+                .AddPolicyHandler(GetRetryPolicy());
 
             services.AddMediatR(typeof(GetArtistsQuery));
             services.AddSingleton<ISearchMusicClient, SearchMusicClient>();
@@ -57,6 +74,17 @@ namespace MusicBrainzDemo
             {
                 endpoints.MapControllers();
             });
+        }
+
+        //Wait and retry with Jittered back-off
+        //https://github.com/Polly-Contrib/Polly.Contrib.WaitAndRetry#wait-and-retry-with-jittered-back-off
+        private static IAsyncPolicy<HttpResponseMessage> GetRetryPolicy()
+        {
+            var delay = Backoff.DecorrelatedJitterBackoffV2(medianFirstRetryDelay: TimeSpan.FromSeconds(1), retryCount: 5);
+
+            return HttpPolicyExtensions
+                .HandleTransientHttpError()
+                .WaitAndRetryAsync(delay);
         }
     }
 }
