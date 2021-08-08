@@ -9,7 +9,6 @@ namespace MusicBrainzDemo.Infrastructure
     public class SearchMusicClient : ISearchMusicClient
     {
         private const string SearchArtistsByNameError = "Error occurred when searching artists.";
-        private const string SearchReleasesByArtistError = "Error occurred when searching releases.";
 
         private readonly IHttpClientFactory _httpClientFactory;
         private readonly ILogger<SearchMusicClient> _logger;
