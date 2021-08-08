@@ -23,9 +23,14 @@ namespace MusicBrainzDemo
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "SearchMusicDemo", Version = "v1" });
+                c.SwaggerDoc(Configuration.GetValue<string>("SwaggerVersion"), new OpenApiInfo
+                {
+                    Title = Configuration.GetValue<string>("SwaggerTitle"),
+                    Version = Configuration.GetValue<string>("SwaggerVersion")
+                });
             });
 
             services.AddMediatR(typeof(GetArtistsQuery));
@@ -39,7 +44,7 @@ namespace MusicBrainzDemo
             {
                 app.UseDeveloperExceptionPage();
                 app.UseSwagger();
-                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "SearchMusicDemo v1"));
+                app.UseSwaggerUI(c => c.SwaggerEndpoint(Configuration.GetValue<string>("SwaggerEndPoint"), Configuration.GetValue<string>("SwaggerApiName")));
             }
 
             app.UseHttpsRedirection();
