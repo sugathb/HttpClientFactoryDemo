@@ -30,7 +30,9 @@ namespace MusicBrainzDemo.Infrastructure
 
                 if (!response.IsSuccessStatusCode)
                 {
-                    throw new HttpRequestException($"{SearchArtistsByNameError} ArtistName: {artistName}");
+                    var errorMessage = await response.Content.ReadAsStringAsync();
+                    var statusCode = response.StatusCode;
+                    throw new HttpRequestException($"{SearchArtistsByNameError} ArtistName: {artistName}, StatusCode: {statusCode}, ErrorMessage: {errorMessage}");
                 }
 
                 var jsonString = await response.Content.ReadAsStringAsync().ConfigureAwait(false);

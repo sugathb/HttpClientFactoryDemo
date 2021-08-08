@@ -7,12 +7,15 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Moq.Protected;
+using NUnit.Framework.Constraints;
 
 namespace MusicBrainzDemo.Infrastructure.Tests
 {
     [TestFixture]
     public class SearchMusicClientTests
     {
+        private const string ExpectedErrorMessage = "Sample error message.";
+
         private readonly Guid _artistId = Guid.Parse("bf24ca37-25f4-4e34-9aec-460b94364cfc");
         private const string ArtistName = "Shakira";
         private const string Country = "Colombia";
@@ -54,6 +57,36 @@ namespace MusicBrainzDemo.Infrastructure.Tests
             Assert.AreEqual(Country, response.Artists[0].Country);
             Assert.AreEqual(Disambiguation, response.Artists[0].Disambiguation);
             Assert.AreEqual(Gender, response.Artists[0].Gender);
+        }
+
+        [TestCase(HttpStatusCode.InternalServerError)]
+        [TestCase(HttpStatusCode.RequestTimeout)]
+        [TestCase(HttpStatusCode.BadRequest)]
+        [TestCase(HttpStatusCode.NotFound)]
+        public void FilterArtistsByNameAsyncThrowsErrorForUnsuccessfulResponses(HttpStatusCode statusCode)
+        {
+            var mockHttpMessageHandler = new Mock<HttpMessageHandler>();
+            mockHttpMessageHandler.Protected()
+                .Setup<Task<HttpResponseMessage>>("SendAsync", ItExpr.IsAny<HttpRequestMessage>(),
+                    ItExpr.IsAny<CancellationToken>())
+                .ReturnsAsync(new HttpResponseMessage
+                {
+                    StatusCode = statusCode,
+                    Content = new StringContent(ExpectedErrorMessage)
+                });
+
+            var httpClient = new HttpClient(mockHttpMessageHandler.Object)
+            {
+                BaseAddress = new Uri("https://samplemusicapi.org")
+            };
+
+            var musicSearchClient = new SearchMusicClient(httpClient, _mockLogger.Object);
+
+            async Task<object> FilterArtistsByNameAsyncDelegate() =>
+                await musicSearchClient.FilterArtistsByNameAsync(ArtistName).ConfigureAwait(false);
+
+            Assert.That((ActualValueDelegate<object>)FilterArtistsByNameAsyncDelegate, Throws.TypeOf<HttpRequestException>()
+                .With.Message.EqualTo($"Error occurred when searching artists. ArtistName: Shakira, StatusCode: {statusCode}, ErrorMessage: {ExpectedErrorMessage}"));
         }
     }
 }
