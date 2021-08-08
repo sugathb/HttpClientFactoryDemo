@@ -42,28 +42,5 @@ namespace MusicBrainzDemo.Infrastructure
                 throw;
             }
         }
-
-        public async Task<ReleasesSearchResponse> FilterReleasesByArtistIdAsync(Guid artistId)
-        {
-            try
-            {
-                var request = new HttpRequestMessage(HttpMethod.Get, $"artist/{artistId}?inc=releases");
-                var client = _httpClientFactory.CreateClient("musicApiClient");
-                var response = await client.SendAsync(request);
-
-                if (!response.IsSuccessStatusCode)
-                {
-                    throw new HttpRequestException($"{SearchReleasesByArtistError} ArtistId: {artistId}");
-                }
-
-                var jsonString = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
-                return JsonConvert.DeserializeObject<ReleasesSearchResponse>(jsonString);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, $"{SearchReleasesByArtistError} ArtistId: {{ArtistId}}", artistId);
-                throw;
-            }
-        }
     }
 }
