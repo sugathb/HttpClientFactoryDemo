@@ -20,16 +20,12 @@ namespace MusicBrainzDemo.Infrastructure.Tests
         private const string Gender = "Female";
         private const string ResponseContent = "{\"Artists\":[{\"Id\":\"bf24ca37-25f4-4e34-9aec-460b94364cfc\",\"Name\":\"Shakira\",\"Gender\":\"Female\",\"Country\":\"Colombia\",\"Disambiguation\":\"Colombian pop vocalist\"}]}";
 
-
-        private Mock<IHttpClientFactory> _mockHttpClientFactory;
+        private HttpClient _httpClient;
         private Mock<ILogger<SearchMusicClient>> _mockLogger;
-
 
         [SetUp]
         public void SetUp()
         {
-            _mockHttpClientFactory = new Mock<IHttpClientFactory>();
-
             var mockHttpMessageHandler = new Mock<HttpMessageHandler>();
             mockHttpMessageHandler.Protected()
                 .Setup<Task<HttpResponseMessage>>("SendAsync", ItExpr.IsAny<HttpRequestMessage>(), ItExpr.IsAny<CancellationToken>())
@@ -39,12 +35,10 @@ namespace MusicBrainzDemo.Infrastructure.Tests
                     Content = new StringContent(ResponseContent),
                 });
 
-            var client = new HttpClient(mockHttpMessageHandler.Object)
+            _httpClient = new HttpClient(mockHttpMessageHandler.Object)
             {
                 BaseAddress = new Uri("https://samplemusicapi.org")
             };
-
-            _mockHttpClientFactory.Setup(_ => _.CreateClient(It.IsAny<string>())).Returns(client);
 
             _mockLogger = new Mock<ILogger<SearchMusicClient>>();
         }
@@ -52,7 +46,7 @@ namespace MusicBrainzDemo.Infrastructure.Tests
         [Test]
         public async Task FilterArtistsByNameAsync_Returns_Correct_Data()
         {
-            var client = new SearchMusicClient(_mockHttpClientFactory.Object, _mockLogger.Object);
+            var client = new SearchMusicClient(_httpClient, _mockLogger.Object);
             var response = await client.FilterArtistsByNameAsync(ArtistName);
             Assert.AreEqual(1, response.Artists.Count);
             Assert.AreEqual(_artistId, response.Artists[0].Id);
