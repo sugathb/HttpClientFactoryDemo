@@ -1,9 +1,12 @@
+using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
+using MusicBrainzDemo.ApplicationServices;
+using MusicBrainzDemo.Infrastructure;
 
 namespace MusicBrainzDemo
 {
@@ -19,12 +22,14 @@ namespace MusicBrainzDemo
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "SearchMusicDemo", Version = "v1" });
             });
+
+            services.AddMediatR(typeof(GetArtistsQuery));
+            services.AddSingleton<ISearchMusicClient, SearchMusicClient>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
