@@ -1,6 +1,6 @@
 # Music Brainz Microservice
 
-Music Brains Demo API allows user to seach music by artist name whcih will return a list of all maching artists.
+Music Brains Demo API allows user to seach music by artist name from an external web api service. It will return a list of all maching artists.
 
 ### API Endpoints
 
